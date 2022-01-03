@@ -1,0 +1,12 @@
+[package]
+name = "inverse-kinematics"
+authors = ["Maxwase <max.vvase@gmail.com>"]
+version = "0.1.0"
+edition = "2021"
+
+[dependencies]
+eframe = "0.16"
+
+# keep debug symbols for debugging purposes
+[profile.release]
+debug = true
