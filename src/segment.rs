@@ -18,7 +18,7 @@ impl Segment {
             angle: 0.0,
             width,
         };
-        segment.calculate_end();
+        segment.update();
         segment
     }
 
@@ -36,20 +36,16 @@ impl Segment {
     }
 
     pub fn update(&mut self) {
-        self.calculate_end();
+        self.end = pos2(
+            self.start.x + self.length * self.angle.cos(),
+            self.start.y + self.length * self.angle.sin(),
+        );
     }
 
     pub fn show(&self) -> Shape {
         let line = [self.start, self.end];
 
         Shape::line_segment(line, (self.width, Color32::WHITE))
-    }
-
-    pub fn calculate_end(&mut self) {
-        self.end = pos2(
-            self.start.x + self.length * self.angle.cos(),
-            self.start.y + self.length * self.angle.sin(),
-        );
     }
 
     pub fn start(&self) -> Pos2 {
