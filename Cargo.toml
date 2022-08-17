@@ -8,7 +8,7 @@ edition = "2021"
 crate-type = ["cdylib", "rlib"]
 
 [dependencies]
-eframe = "0.16"
+eframe = "0.18"
 
 # keep debug symbols for debugging purposes
 [profile.release]

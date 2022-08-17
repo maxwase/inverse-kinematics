@@ -6,5 +6,9 @@ fn main() {
         maximized: true,
         ..Default::default()
     };
-    eframe::run_native(Box::new(app), native_options);
+    eframe::run_native(
+        "Inverse kinematics",
+        native_options,
+        Box::new(|_| Box::new(app)),
+    );
 }

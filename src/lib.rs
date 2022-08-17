@@ -9,5 +9,5 @@ use eframe::wasm_bindgen::{self, prelude::*};
 #[wasm_bindgen]
 pub fn web_main(canvas_id: &str) -> Result<(), eframe::wasm_bindgen::JsValue> {
     let app = KinematicsApp::default();
-    eframe::start_web(canvas_id, Box::new(app))
+    eframe::start_web(canvas_id, Box::new(|_| Box::new(app)))
 }

@@ -2,9 +2,10 @@ use std::cmp::Ordering;
 
 use eframe::{
     egui::{
-        self, pos2, vec2, CollapsingHeader, Frame, Painter, Pos2, Slider, Stroke, Ui, Vec2, Visuals,
+        self, pos2, vec2, CollapsingHeader, Frame as EguiFrame, Painter, Pos2, Slider, Stroke, Ui,
+        Vec2, Visuals,
     },
-    epi::{self, App},
+    App, Frame,
 };
 
 use crate::segment::Segment;
@@ -59,7 +60,7 @@ impl KinematicsApp {
         // Make sure we allocate what we used (everything)
         ui.expand_to_include_rect(painter.clip_rect());
 
-        Frame::popup(ui.style())
+        EguiFrame::popup(ui.style())
             .stroke(Stroke::none())
             .show(ui, |ui| {
                 CollapsingHeader::new("Settings").show(ui, |ui| self.options_ui(ui));
@@ -143,7 +144,7 @@ impl KinematicsApp {
 }
 
 impl App for KinematicsApp {
-    fn update(&mut self, ctx: &egui::CtxRef, _frame: &epi::Frame) {
+    fn update(&mut self, ctx: &egui::Context, _frame: &mut Frame) {
         egui::CentralPanel::default().show(ctx, |ui| {
             ctx.set_visuals(Visuals::dark());
             let cursor_pos = ctx.input().pointer.interact_pos();
@@ -164,14 +165,5 @@ impl App for KinematicsApp {
                 self.main_ui(ui, self.prev_pos + add);
             }
         });
-    }
-
-    fn name(&self) -> &str {
-        "Inverse kinematics"
-    }
-
-    fn max_size_points(&self) -> Vec2 {
-        // Fullscreen
-        vec2(f32::MAX, f32::MAX)
     }
 }
