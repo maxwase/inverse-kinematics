@@ -14,4 +14,4 @@ Directory name `docs/` was chosen for the GitHub pages support.
 
 You also can try it online at https://maxwase.github.io/inverse-kinematics/
 
-![](https://user-images.githubusercontent.com/23321756/147956344-b4fc7905-f2ee-4e1e-8c99-76c2a7bba2a0.gif)
+![Peek 2022-08-17 23-19](https://user-images.githubusercontent.com/23321756/185235570-f974e7a1-fb7c-4719-80bb-fe0d90d090a8.gif)
