@@ -2,11 +2,11 @@ use eframe::egui::{pos2, Color32, Pos2, Shape};
 
 #[derive(PartialEq, Debug)]
 pub struct Segment {
-    start: Pos2,
-    end: Pos2,
-    length: f32,
-    width: f32,
-    angle: f32,
+    pub start: Pos2,
+    pub end: Pos2,
+    pub length: f32,
+    pub width: f32,
+    pub angle: f32,
 }
 
 impl Segment {
@@ -46,13 +46,5 @@ impl Segment {
         let line = [self.start, self.end];
 
         Shape::line_segment(line, (self.width, Color32::WHITE))
-    }
-
-    pub fn start(&self) -> Pos2 {
-        self.start
-    }
-
-    pub fn end(&self) -> Pos2 {
-        self.end
     }
 }

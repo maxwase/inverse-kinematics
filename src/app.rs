@@ -1,7 +1,8 @@
+use std::cmp::Ordering;
+
 use eframe::{
     egui::{
-        self, pos2, vec2, Button, CollapsingHeader, Frame, Painter, Pos2, Slider, Stroke, Ui, Vec2,
-        Visuals,
+        self, pos2, vec2, CollapsingHeader, Frame, Painter, Pos2, Slider, Stroke, Ui, Vec2, Visuals,
     },
     epi::{self, App},
 };
@@ -22,18 +23,16 @@ pub struct KinematicsApp {
 
 impl Default for KinematicsApp {
     fn default() -> Self {
-        let mut app = Self {
+        Self {
             paused: false,
             length: 10.0,
             n_segments: 50,
             width_factor: 0.0,
             width: 1.0,
             segments: vec![],
-            regenerate: false,
+            regenerate: true,
             prev_pos: Default::default(),
-        };
-        app.regenerate();
-        app
+        }
     }
 }
 
@@ -67,6 +66,7 @@ impl KinematicsApp {
             });
     }
 
+    /// Paints all segments. Segments amount must be greater than 1.
     fn paint(&mut self, painter: &Painter, cursor_pos: Pos2) {
         let mut shapes = Vec::with_capacity(self.n_segments);
 
@@ -74,9 +74,9 @@ impl KinematicsApp {
         self.segments[0].update();
         shapes.push(self.segments[0].show());
 
-        for i in 1..self.segments.len() {
-            let pos2 = self.segments[i - 1].start();
-            let segment = &mut self.segments[i];
+        for n in 1..self.segments.len() {
+            let pos2 = self.segments[n - 1].start;
+            let segment = &mut self.segments[n];
             segment.follow(pos2);
             segment.update();
             shapes.push(segment.show());
@@ -87,26 +87,57 @@ impl KinematicsApp {
 
     fn options_ui(&mut self, ui: &mut Ui) {
         ui.checkbox(&mut self.paused, "Paused");
-        ui.add(Slider::new(&mut self.n_segments, 0..=500).text("segments number"));
-        ui.add(Slider::new(&mut self.length, 0.0..=100.0).text("length"));
-        ui.add(Slider::new(&mut self.width, 0.0..=100.0).text("width"));
-        ui.add(Slider::new(&mut self.width_factor, -5.0..=5.0).text("width factor"));
-        if ui.add(Button::new("Regenerate")).clicked() {
+
+        let n_segments = ui.add(Slider::new(&mut self.n_segments, 2..=500).text("segments number"));
+        let length = ui.add(Slider::new(&mut self.length, 0.1..=100.0).text("length"));
+        let width = ui.add(Slider::new(&mut self.width, 0.1..=100.0).text("width"));
+        let width_factor =
+            ui.add(Slider::new(&mut self.width_factor, -5.0..=5.0).text("width factor"));
+
+        if [n_segments, length, width, width_factor]
+            .iter()
+            .any(|x| x.changed())
+        {
             self.regenerate = true;
         }
         egui::reset_button(ui, self);
     }
 
     fn regenerate(&mut self) {
-        self.segments = (0..self.n_segments)
-            .map(|n| {
-                Segment::new(
-                    pos2(0.0 + self.length * n as f32, 0.0),
-                    self.length,
-                    self.width + (self.width_factor * n as f32),
-                )
-            })
-            .collect();
+        let prev_n_segments = self.segments.len();
+
+        if let Some(segment) = self.segments.first_mut() {
+            segment.length = self.length;
+            segment.width = self.width;
+            segment.update();
+        }
+
+        for n in 1..prev_n_segments {
+            let pos2 = self.segments[n - 1].start;
+            let segment = &mut self.segments[n];
+            segment.length = self.length;
+            segment.width = self.width + (self.width_factor * n as f32);
+            segment.follow(pos2);
+            segment.update();
+        }
+
+        match prev_n_segments.cmp(&self.n_segments) {
+            Ordering::Less => {
+                self.segments
+                    .extend((prev_n_segments..self.n_segments).map(|n| {
+                        Segment::new(
+                            pos2(self.length * n as f32, 0.0),
+                            self.length,
+                            self.width + (self.width_factor * n as f32),
+                        )
+                    }));
+            }
+            Ordering::Greater => {
+                self.segments.truncate(self.n_segments);
+            }
+            Ordering::Equal => {}
+        }
+
         self.regenerate = false;
     }
 }
@@ -123,7 +154,7 @@ impl App for KinematicsApp {
                 let add = if self
                     .segments
                     .last()
-                    .map(|segment| segment.end().x > 0.0)
+                    .map(|segment| segment.end.x > 0.0)
                     .unwrap_or(true)
                 {
                     vec2(-1.0, 1.0)
