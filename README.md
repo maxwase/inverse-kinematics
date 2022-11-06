@@ -9,8 +9,8 @@ will follow your cursor.
 To play with this, make sure you have [egui dependencies](https://github.com/maxwase/egui#demo)
 installed, then run `cargo run --release`.
 
-To try it on web, run `./start_web`. Run `setup_web.sh` if you're compiling this for the first time.
-Directory name `docs/` was chosen for the GitHub pages support.
+To try it on web, run `./start_web`. Run `./setup_web.sh` if you're compiling this for the first time.
+Actual webpage is deployed on `gh-pages` branch.
 
 You also can try it online at https://maxwase.github.io/inverse-kinematics/
 
