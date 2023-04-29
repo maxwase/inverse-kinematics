@@ -1,9 +1,7 @@
 use inverse_kinematics::KinematicsApp;
 
 #[cfg(not(target_arch = "wasm32"))]
-fn main() {
-    let app = KinematicsApp::default();
-
+fn main() -> Result<(), eframe::Error> {
     let native_options = eframe::NativeOptions {
         maximized: true,
         ..Default::default()
@@ -11,8 +9,8 @@ fn main() {
     eframe::run_native(
         "Inverse kinematics",
         native_options,
-        Box::new(|_| Box::new(app)),
-    );
+        Box::new(|_| Box::<KinematicsApp>::default()),
+    )
 }
 
 // when compiling to web using trunk.
@@ -25,10 +23,14 @@ fn main() {
     tracing_wasm::set_as_global_default();
 
     let web_options = eframe::WebOptions::default();
-    eframe::start_web(
-        "inverse_kinematics",
-        web_options,
-        Box::new(|_| Box::new(KinematicsApp::default())),
-    )
-    .expect("failed to start eframe");
+
+    wasm_bindgen_futures::spawn_local(async {
+        eframe::start_web(
+            "inverse_kinematics", // hardcode it
+            web_options,
+            Box::new(|_| Box::<KinematicsApp>::default()),
+        )
+        .await
+        .expect("start kinematics app");
+    });
 }

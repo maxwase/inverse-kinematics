@@ -2,8 +2,8 @@ use std::cmp::Ordering;
 
 use eframe::{
     egui::{
-        self, pos2, vec2, CollapsingHeader, Frame as EguiFrame, Painter, Pos2, Slider, Stroke, Ui,
-        Vec2, Visuals,
+        self, pos2, vec2, CollapsingHeader, Frame as EguiFrame, Painter, Pos2, Slider, Ui, Vec2,
+        Visuals,
     },
     App, Frame,
 };
@@ -67,11 +67,9 @@ impl KinematicsApp {
         // Make sure we allocate what we used (everything)
         ui.expand_to_include_rect(painter.clip_rect());
 
-        EguiFrame::popup(ui.style())
-            .stroke(Stroke::none())
-            .show(ui, |ui| {
-                CollapsingHeader::new("Settings").show(ui, |ui| self.add_ui_options(ui));
-            });
+        EguiFrame::popup(ui.style()).show(ui, |ui| {
+            CollapsingHeader::new("Settings").show(ui, |ui| self.add_ui_options(ui));
+        });
     }
 
     /// Paints all segments.
@@ -144,7 +142,7 @@ impl App for KinematicsApp {
         egui::CentralPanel::default().show(ctx, |ui| {
             ctx.set_visuals(Visuals::dark());
 
-            let cursor_pos = ctx.input().pointer.interact_pos();
+            let cursor_pos = ctx.input(|i| i.pointer.interact_pos());
 
             if let Some(pos) = cursor_pos {
                 self.main_ui(ui, pos);
