@@ -5,6 +5,11 @@ on:
   push:
     branches:
       - master
+# to only run when you do a new github release, comment out above part and uncomment the below trigger.
+# on:
+#   release:
+#     types:
+#       - published
 
 permissions:
   contents: write # for committing to gh-pages branch.
@@ -20,12 +25,14 @@ jobs:
           toolchain: stable
           target: wasm32-unknown-unknown
           override: true
-      - name: Rust Cache # cache the rust build artefacts
+      - name: Rust Cache
         uses: Swatinem/rust-cache@v1
       - name: Download and install Trunk binary
         run: wget -qO- https://github.com/thedodd/trunk/releases/latest/download/trunk-x86_64-unknown-linux-gnu.tar.gz | tar -xzf-
       - name: Build
-        run: ./trunk build --release --public-url "${GITHUB_REPOSITORY#*/}"
+        run: ./trunk build --release --public-url $public_url
+        env:
+          public_url: "https://${{ github.repository_owner }}.github.io/${{ github.event.repository.name }}"
       - name: Deploy
         uses: JamesIves/github-pages-deploy-action@v4
         with:

@@ -5,9 +5,7 @@ version = "0.1.0"
 edition = "2021"
 
 [dependencies]
-eframe = { version = "0.21.3" }
+eframe = { version = "0.27.0" }
 
 [target.'cfg(target_arch = "wasm32")'.dependencies]
 wasm-bindgen-futures = "0.4.34"
-console_error_panic_hook = "0.1.7"
-tracing-wasm = "0.2"
