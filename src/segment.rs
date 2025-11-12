@@ -38,7 +38,7 @@ impl Segment {
             direction.x /= magnitude;
             direction.y /= magnitude;
         }
-        direction *= -1.0 * self.length;
+        direction *= -self.length;
         self.start = target + direction;
 
         self.update();

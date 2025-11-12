@@ -101,7 +101,7 @@ impl KinematicsApp {
         {
             self.regenerate = true;
         }
-        egui::reset_button(ui, self);
+        egui::reset_button(ui, self, "Reset");
     }
 
     /// Updates segments properties.
@@ -153,7 +153,7 @@ impl App for KinematicsApp {
                 let add = if self
                     .segments
                     .last()
-                    .map_or(true, |segment| segment.end().x > 0.0)
+                    .is_none_or(|segment| segment.end().x > 0.0)
                 {
                     vec2(-1.0, 1.0)
                 } else {
