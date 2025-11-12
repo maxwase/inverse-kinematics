@@ -1,0 +1,10 @@
+{
+  "name": "Inverse kinematics",
+  "short_name": "inv-kinematics",
+  "lang": "en-US",
+  "id": "/index.html",
+  "start_url": "./index.html",
+  "display": "standalone",
+  "background_color": "white",
+  "theme_color": "white"
+}
