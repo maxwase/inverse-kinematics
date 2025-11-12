@@ -1,4 +1,4 @@
-use eframe::egui::{pos2, Color32, Pos2, Shape};
+use eframe::egui::{Color32, Pos2, Shape, pos2};
 
 #[derive(PartialEq, Debug)]
 pub struct Segment {

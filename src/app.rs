@@ -1,11 +1,11 @@
 use std::cmp::Ordering;
 
 use eframe::{
-    egui::{
-        self, pos2, vec2, CollapsingHeader, Frame as EguiFrame, Painter, Pos2, Slider, Ui, Vec2,
-        Visuals,
-    },
     App, Frame,
+    egui::{
+        self, CollapsingHeader, Frame as EguiFrame, Painter, Pos2, Slider, Ui, Vec2, Visuals, pos2,
+        vec2,
+    },
 };
 
 use crate::segment::Segment;

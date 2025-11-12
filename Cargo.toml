@@ -2,7 +2,7 @@
 name = "inverse-kinematics"
 authors = ["Maxwase <max.vvase@gmail.com>"]
 version = "0.1.0"
-edition = "2021"
+edition = "2024"
 
 [dependencies]
 eframe = { version = "0.33" }
