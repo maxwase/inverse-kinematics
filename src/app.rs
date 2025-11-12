@@ -25,8 +25,8 @@ pub struct KinematicsApp {
 
     /// Current direction.
     current_target_pos: Pos2,
-    /// Stop following.
-    paused: bool,
+    /// Movement speed.
+    speed: f32,
     /// Shows that parameters have changed.
     regenerate: bool,
 }
@@ -40,7 +40,7 @@ impl Default for KinematicsApp {
             width: 1.0,
             width_factor: 0.0,
             current_target_pos: Pos2::default(),
-            paused: false,
+            speed: 1.0,
             regenerate: true,
         }
     }
@@ -59,9 +59,7 @@ impl KinematicsApp {
             ui.available_rect_before_wrap(),
         );
 
-        if !self.paused {
-            self.current_target_pos = target_pos;
-        };
+        self.current_target_pos = target_pos;
         self.paint(&painter, self.current_target_pos);
 
         // Make sure we allocate what we used (everything)
@@ -86,8 +84,7 @@ impl KinematicsApp {
 
     /// Adds UI options for the app.
     fn add_ui_options(&mut self, ui: &mut Ui) {
-        ui.checkbox(&mut self.paused, "Paused");
-
+        let speed = ui.add(Slider::new(&mut self.speed, 0.0..=10.0).text("Speed"));
         let n_segments =
             ui.add(Slider::new(&mut self.segments_amount, 1..=500).text("segments number"));
         let length = ui.add(Slider::new(&mut self.length, 0.1..=100.0).text("length"));
@@ -95,7 +92,7 @@ impl KinematicsApp {
         let width_factor =
             ui.add(Slider::new(&mut self.width_factor, -5.0..=5.0).text("width factor"));
 
-        if [n_segments, length, width, width_factor]
+        if [n_segments, length, width, width_factor, speed]
             .iter()
             .any(eframe::egui::Response::changed)
         {
@@ -155,7 +152,8 @@ impl App for KinematicsApp {
                     .last()
                     .is_none_or(|segment| segment.end().x > 0.0)
                 {
-                    vec2(-1.0, 1.0)
+                    let speed = self.speed;
+                    vec2(-speed, speed)
                 } else {
                     Vec2::ZERO
                 };
